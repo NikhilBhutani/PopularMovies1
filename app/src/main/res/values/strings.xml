@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">PopularMovies1</string>
+    <string name="app_name">PopularMoviesOne</string>
+    <string name="action_settings">Settings</string>
+
 </resources>
