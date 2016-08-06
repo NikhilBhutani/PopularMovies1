@@ -1,5 +1,18 @@
 <resources>
     <string name="app_name">PopularMoviesOne</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_topRated">Top Rated</string>
+    <string name="action_popular">Popular</string>
 
+
+    <string name="no_network">Check your internet connection</string>
+
+    <!-- Action Bar titles -->
+    <string name="popular_movies_title_actionBar">Popular Movies</string>
+    <string name="topRated_movies_title_actionBar">Top Rated Movies</string>
+    <string name="MovieDetail_title_actionBar">Movie Details</string>
+
+    <string name="exit">Press Back Again To Exit.</string>
+    <string name="title_language">Language</string>
+    <string name="title_releaseDate">Release Date</string>
+    <string name="title_voteAverage">Vote Average</string>
 </resources>

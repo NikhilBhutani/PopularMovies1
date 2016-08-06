@@ -12,14 +12,22 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".ui.activities.MainActivity">
+        <activity android:name=".ui.activities.MainActivity"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.settings.SettingsActivity"/>
+        <activity android:name=".ui.activities.DetailActivity"
+            android:launchMode="singleTask"
+            android:parentActivityName=".ui.activities.MainActivity"
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.activities.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

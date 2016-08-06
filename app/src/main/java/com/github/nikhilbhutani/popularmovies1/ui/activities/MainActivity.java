@@ -1,26 +1,27 @@
 package com.github.nikhilbhutani.popularmovies1.ui.activities;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
-import com.github.nikhilbhutani.popularmovies1.R;
-import com.github.nikhilbhutani.popularmovies1.model.Movie;
-import com.github.nikhilbhutani.popularmovies1.network.FetchMovies;
-import com.github.nikhilbhutani.popularmovies1.ui.fragments.MainActivityFragment;
-import com.github.nikhilbhutani.popularmovies1.ui.settings.SettingsActivity;
 
-import java.util.List;
+import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+
+import com.github.nikhilbhutani.popularmovies1.R;
+import com.github.nikhilbhutani.popularmovies1.ui.fragments.MainActivityFragment;
+
+import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static ActionBar actionBar;
+    private boolean exit = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        actionBar = getSupportActionBar();
 
         if (savedInstanceState == null) {
 
@@ -29,30 +30,22 @@ public class MainActivity extends AppCompatActivity {
                     .commit();
         }
 
-
+        if (actionBar != null) {
+            actionBar.setTitle("Popular Movies");
+        }
     }
 
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public void onBackPressed() {
 
-        getMenuInflater().inflate(R.menu.main, menu);
+        if (exit) {
+            super.onBackPressed();
 
-        return super.onCreateOptionsMenu(menu);
-
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        int id = item.getItemId();
-
-        if(id == R.id.action_settings){
-            startActivity(new Intent(this, SettingsActivity.class));
-            return true;
+        } else {
+            Snackbar.make(this.findViewById(R.id.container), R.string.exit, Snackbar.LENGTH_SHORT).show();
+            exit = true;
         }
 
-        return super.onOptionsItemSelected(item);
     }
-
 }

@@ -7,8 +7,11 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
+import android.view.View;
 
+import com.github.nikhilbhutani.popularmovies1.R;
 import com.github.nikhilbhutani.popularmovies1.model.Movie;
 
 import com.github.nikhilbhutani.popularmovies1.ui.fragments.MainActivityFragment;
@@ -37,12 +40,31 @@ public class FetchMovies extends AsyncTask<Void, Void, List<Movie>> {
 
     private final String LOG_TAG = FetchMovies.class.getSimpleName();
     ListenerInterface delegate;
-    public ProgressDialog progressDialog;
     Context mcontext;
+    JSONObject jsonObject;
+    JSONArray jsonArray;
+    public static ProgressDialog progressDialog;
+    String sortParam = "popular";
     ConnectivityManager connectivityManager;
     NetworkInfo networkInfo;
+    View view;
+    Uri builderUri;
 
-    public FetchMovies(Context context, ListenerInterface myInterface) {
+    public FetchMovies(Context context, View view1, ListenerInterface myInterface) {
+
+        if (myInterface == null) {
+            throw new NullPointerException("Listener cant be null");
+        }
+
+        this.mcontext = context;
+        this.setListener(myInterface);
+
+        progressDialog = new ProgressDialog(context);
+        this.view = view1;
+    }
+
+
+    public FetchMovies(Context context, View view1, ListenerInterface myInterface, String topRated) {
 
         if (myInterface == null) {
             throw new NullPointerException("Listener cant be null");
@@ -52,7 +74,10 @@ public class FetchMovies extends AsyncTask<Void, Void, List<Movie>> {
         this.setListener(myInterface);
 
         this.progressDialog = new ProgressDialog(context);
+        this.view = view1;
+        this.sortParam = topRated;
     }
+
 
     public void setListener(ListenerInterface listener) {
         this.delegate = listener;
@@ -69,24 +94,24 @@ public class FetchMovies extends AsyncTask<Void, Void, List<Movie>> {
     private List<Movie> getMovies(String completeJSONString) throws JSONException {
 
         List<Movie> movies = new ArrayList<>();
+        if (completeJSONString != null) {
+            jsonObject = new JSONObject(completeJSONString);
 
-        JSONObject jsonObject = new JSONObject(completeJSONString);
+            jsonArray = jsonObject.getJSONArray("results");
 
-        JSONArray jsonArray = jsonObject.getJSONArray("results");
+            for (int i = 0; i < 20; i++) {
 
-        for (int i = 0; i < 20; i++) {
-
-            JSONObject finaljsonObject = jsonArray.getJSONObject(i);
+                JSONObject finaljsonObject = jsonArray.getJSONObject(i);
 
 
-            Movie movie = new Gson().fromJson(finaljsonObject.toString(), Movie.class);
+                Movie movie = new Gson().fromJson(finaljsonObject.toString(), Movie.class);
 
-            //     System.out.println(movie.getTitle());
+                //     System.out.println(movie.getTitle());
 
-            movies.add(movie);
+                movies.add(movie);
 
+            }
         }
-
         return movies;
     }
 
@@ -100,13 +125,23 @@ public class FetchMovies extends AsyncTask<Void, Void, List<Movie>> {
         String completeJSONString = null;
 
 
-        final String api_key = "ENTER API KEY HERE";
+        final String api_key = "ENTER YOUR API KEY HERE";
         final String API_KEY = "api_key";
         //  final String QUERY_POPULAR = "popular"
 
-        Uri builderUri = Uri.parse(Constants.API_URL).buildUpon()
-                .appendQueryParameter(API_KEY, api_key)
-                .build();
+        if (sortParam == "top_rated") {
+
+            builderUri = Uri.parse(Constants.TOP_RATED_MOVIES_API_URL).buildUpon()
+                    .appendQueryParameter(API_KEY, api_key)
+                    .build();
+
+        } else if (sortParam == "popular") {
+
+            builderUri = Uri.parse(Constants.POPULAR_MOVIES__API_URL).buildUpon()
+                    .appendQueryParameter(API_KEY, api_key)
+                    .build();
+
+        }
 
         Log.v(LOG_TAG, builderUri.toString());
 
@@ -139,6 +174,7 @@ public class FetchMovies extends AsyncTask<Void, Void, List<Movie>> {
             e.printStackTrace();
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error ", e);
+            Snackbar.make(view, R.string.no_network, Snackbar.LENGTH_LONG).show();
         } finally {
             if (httpURLConnection != null) {
                 httpURLConnection.disconnect();
@@ -162,9 +198,24 @@ public class FetchMovies extends AsyncTask<Void, Void, List<Movie>> {
     @Override
     protected void onPostExecute(List<Movie> myMovieList) {
 
-        progressDialog.dismiss();
-        if (delegate != null) {
-            delegate.response(myMovieList);
+        connectivityManager = (ConnectivityManager) mcontext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        networkInfo = connectivityManager.getActiveNetworkInfo();
+
+        if (networkInfo == null) {
+
+            progressDialog.dismiss();
+            Snackbar.make(view, R.string.no_network, Snackbar.LENGTH_LONG).show();
+        } else {
+
+            if (progressDialog != null && progressDialog.isShowing()) {
+                progressDialog.dismiss();
+                progressDialog = null;
+            }
+            if (delegate != null) {
+                delegate.response(myMovieList);
+            }
         }
     }
+
+
 }
