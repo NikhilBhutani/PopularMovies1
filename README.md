@@ -7,17 +7,18 @@ This is the first project created as part of Android Developer Nanodegree provid
 
 - Find popular and highest rated movies.
 - Detailed description
-- Ratings
+- Language
 - Release Date
+- Vote Average
 
 ### Libraries Used
 
-- Design Library
-- Gson
-- Glide
-- Cardview
-- Recyclerview
-- Butterknife
+- [Design Library] (https://developer.android.com/topic/libraries/support-library/features.html)
+- [Gson] (https://github.com/google/gson)
+- [Glide] (https://github.com/bumptech/glide)
+- [Cardview] (https://developer.android.com/topic/libraries/support-library/features.html)
+- [Recyclerview] (https://developer.android.com/topic/libraries/support-library/features.html)
+- [Butterknife] (https://github.com/JakeWharton/butterknife)
 
 ### Screenshots
 
