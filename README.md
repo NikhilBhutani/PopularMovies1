@@ -19,6 +19,11 @@ This is the first project created as part of Android Developer Nanodegree provid
 - Recyclerview
 - Butterknife
 
+### Screenshots
+<img width="30%" src=".screenshots/device_project1_s1.png />
+<img width="30%" src=".screenshots/device_project1_s2.png />
+<img width="30%" src=".screenshots/device_project1_s3.png />
+
 # License
 
     Copyright 2016 Nikhil Bhutani
